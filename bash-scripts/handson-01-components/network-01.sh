@@ -1,3 +1,4 @@
+#!/bin/bash
 # Create Virtual Network, Subnet Network Security Group and  NSG rules 
 az network vnet create --name vnet01 --resource-group handson --location eastus --address-prefix 10.0.0.0/8 --subnet-name subnet01 --subnet-prefix 10.1.0.0/16
 az network nsg create -g handson --name nsg01 --location eastus
