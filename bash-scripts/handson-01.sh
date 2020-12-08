@@ -59,9 +59,6 @@ az network lb probe create -g handson --lb-name extlb --name mylbhp --port 80 --
 az network lb rule create -g handson --backend-port 80 --frontend-port 80 --lb-name extlb \
 --name mylbrule --protocol tcp --backend-pool-name mybepool --probe-name mylbhp
 
-### delete bepool
-az network lb address-pool delete --lb-name extlb --name mybepool -g handson
-
 # add vm to lb backend pool
 ## --ip-config-name: nic ip configuration name
 ## --nic name: nic name
