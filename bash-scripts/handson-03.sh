@@ -27,7 +27,7 @@ az vm create -g handson \
 --vnet-name vnet01 \
 --subnet subnet01 \
 --availability-set avset01 \
---nsg none --public-ip-address "" --image Win2019Datacenter \
+--nsg "" --public-ip-address "" --image Win2019Datacenter \
 --size Standard_D1_v2 \
 --storage-sku Standard_LRS \
 --admin-username USERNAME \
@@ -38,7 +38,7 @@ az vm create -g handson \
 --vnet-name vnet01 \
 --subnet subnet01 \
 --availability-set avset01 \
---nsg none --public-ip-address "" --image Win2019Datacenter \
+--nsg "" --public-ip-address "" --image Win2019Datacenter \
 --size Standard_D1_v2 \
 --storage-sku Standard_LRS \
 --admin-username USERNAME \
@@ -54,7 +54,7 @@ az vm create -g handson \
 --vnet-name vnet01 \
 --subnet subnet02 \
 --availability-set avset02 \
---nsg none --public-ip-address "" --image Win2019Datacenter \
+--nsg "" --public-ip-address "" --image Win2019Datacenter \
 --size Standard_D1_v2 \
 --storage-sku Standard_LRS \
 --admin-username USERNAME \
@@ -65,7 +65,7 @@ az vm create -g handson \
 --vnet-name vnet01 \
 --subnet subnet02 \
 --availability-set avset02 \
---nsg none --public-ip-address "" --image Win2019Datacenter \
+--nsg "" --public-ip-address "" --image Win2019Datacenter \
 --size Standard_D1_v2 \
 --storage-sku Standard_LRS \
 --admin-username USERNAME \

@@ -24,8 +24,8 @@ az vm create -g handson \
 --size Standard_D1_v2 \
 --admin-username azureuser \
 --storage-sku Standard_LRS \
---admin-username USERNAME \
---admin-password PASSWORD
+--admin-username azureuser \
+--admin-password dkagh1.dkagh1.
 
 az vm create -g handson \
 --name vm02 \
@@ -36,8 +36,8 @@ az vm create -g handson \
 --size Standard_D1_v2 \
 --admin-username azureuser \
 --storage-sku Standard_LRS \
---admin-username USERNAME \
---admin-password PASSWORD
+--admin-username azureuser \
+--admin-password dkagh1.dkagh1.
 
 # Create Load balancer
 ## create public ip
@@ -70,8 +70,7 @@ az network lb address-pool delete --lb-name extlb --name mybepool -g handson
 ### az network nic ip-config list --nic-name --resource-group                             \
 az network nic ip-config address-pool add \
 --address-pool mybepool \
---ip-config-name ipconfigvm01 \
---nic-name vm01VMNic \
+--ip-config-name ipconfigvm01 --nic-name vm01VMNic \
 -g handson \
 --lb-name extlb
 
