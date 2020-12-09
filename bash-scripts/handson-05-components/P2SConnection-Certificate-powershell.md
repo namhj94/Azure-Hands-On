@@ -10,7 +10,7 @@ if ($PSVersionTable.PSEdition -eq 'Desktop' -and (Get-Module -Name AzureRM -List
     Install-Module -Name Az -AllowClobber -Scope CurrentUser
 }
 ```
-[Go to Docs][https://docs.microsoft.com/ko-kr/powershell/azure/install-az-ps?view=azps-5.2.0#code-try-1]
+[Go to Docs](https://docs.microsoft.com/ko-kr/powershell/azure/install-az-ps?view=azps-5.2.0#code-try-1)
 
 ### Login Using Azure Powershell
 1. Powershell을 로컬로 실행 하는 경우 로그인
