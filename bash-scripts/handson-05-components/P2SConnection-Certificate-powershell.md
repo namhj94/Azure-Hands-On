@@ -76,7 +76,7 @@ New-SelfSignedCertificate -Type Custom -DnsName P2SChildCert -KeySpec Signature 
     ```
     2. 파일 경로를 고유한 값으로 바꾼 후 cmdlet 실행
     ```
-    $filePathForCert = "C:\cert\P2SRootCert.cer"
+    $filePathForCert = "PATH\FILENAME.cer"
     $cert = new-object System.Security.Cryptography.X509Certificates.X509Certificate2($filePathForCert)
     $CertBase64 = [system.convert]::ToBase64String($cert.RawData)
     ```
