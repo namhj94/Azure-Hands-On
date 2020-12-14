@@ -1,17 +1,17 @@
-### Create GatewaySubnet
+# Create GatewaySubnet
 az network vnet subnet create \
 --vnet-name vnet01 \
 -n GatewaySubnet \
 -g handson \
 --address-prefix 10.100.100.0/24
 
-### Create Public IP
+# Create Public IP
 az network public-ip create \
 -n hjvnetGWPip \
 -g handson \
 --allocation-method Dynamic
 
-### Create Gateway
+# Create Gateway
 az network vnet-gateway create \
 -n hjvnetGW \
 -l eastus \

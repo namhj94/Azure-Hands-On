@@ -41,6 +41,6 @@ az storage file upload \
     --source "test.txt" \
     --path "hjdirectory/test.txt"
 
-## vm03, vm04 에서  file share 사용하기 위해선 vm03,vm04에 직접 접속하여 powershell에서 file share 연결 후 사용
-## file share dashboard에서 연결 커맨드 확인 가능
-## storageaccount -> fileshare -> hjfileshare -> connect
+# vm03, vm04 에서  file share 사용하기 위해선 vm03,vm04에 직접 접속하여 powershell에서 file share 연결 후 사용
+# file share dashboard에서 연결 커맨드 확인 가능
+# storageaccount -> fileshare -> hjfileshare -> connect
