@@ -8,6 +8,7 @@
 ### Add-AzVirtualNetworkSubnetConfig
 Adds a subnet configuration to a virtual network. => 새로운 subnet을 기존에 있는 vnet에 추가
 ### Set-AzVirtualNetworkSubnetConfig
-Updates a subnet configuration for a virtual network. => 기존에 있는 서브넷 정보 업데이트, Add로 추가하고 Set을 해줘야 반영이 됨
+- Updates a subnet configuration for a virtual network. => 기존에 있는 서브넷 정보 업데이트
+- 이후 Set-AzVirtualNetwork 필요, Subnet을 Add로 추가하고 Vnet에서 Set을 해줘야 해당 Vnet에 추가한 Subnet이 반영이 됨
 ### Get-AzVirtualNetworkSubnetConfig
 Gets a subnet in a virtual network. => 기존에 있는 서브넷 정보 획득하여 구성에 사용
