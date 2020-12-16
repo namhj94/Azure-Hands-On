@@ -30,8 +30,8 @@ az vm create -g handson \
 --size Standard_D1_v2 \
 --admin-username azureuser \
 --storage-sku Standard_LRS \
---admin-username azureuser \
---admin-password dkagh1.dkagh1.
+--admin-username USERNAME \
+--admin-password PASSWORD
 
 az vm create -g handson \
 --name vm02 \
@@ -42,8 +42,8 @@ az vm create -g handson \
 --size Standard_D1_v2 \
 --admin-username azureuser \
 --storage-sku Standard_LRS \
---admin-username azureuser \
---admin-password dkagh1.dkagh1.
+--admin-username USERNAME \
+--admin-password PASSWORD
 
 az vm create -g handson \
 --name vm03 \
@@ -53,8 +53,8 @@ az vm create -g handson \
 --size Standard_D1_v2 \
 --admin-username azureuser \
 --storage-sku Standard_LRS \
---admin-username azureuser \
---admin-password dkagh1.dkagh1.
+--admin-username USERNAME \
+--admin-password PASSWORD
 
 # Create Load balancer
 # create public ip

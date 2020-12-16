@@ -47,6 +47,16 @@ Set-AzVirtualNetworkSubnetConfig -Name hjsubnet01 -VirtualNetwork $Vnet -Address
 -NetworkSecurityGroup $nsg
 $Vnet | Set-AzVirtualNetwork
 
+# Create Availability Set
+$avset = New-AzAvailabilitySet `
+   -Location "EastUS" `
+   -Name "hjavset" `
+   -ResourceGroupName "hjrg" `
+   -Sku aligned `
+   -PlatformFaultDomainCount 2 `
+   -PlatformUpdateDomainCount 2
+
+
 # Create Virtual Machine
 $VMLocalAdminUser = "azureuser"
 $VMLocalAdminSecurePassword = ConvertTo-SecureString  -AsPlainText -Force
@@ -62,7 +72,7 @@ $NIC = New-AzNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupNa
 
 $Credential = New-Object System.Management.Automation.PSCredential ($VMLocalAdminUser, $VMLocalAdminSecurePassword);
 
-$VirtualMachine = New-AzVMConfig -VMName $VMName -VMSize $VMSize
+$VirtualMachine = New-AzVMConfig -VMName $VMName -VMSize $VMSize -AvailabilitySetId $avset.Id
 $VirtualMachine = Set-AzVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $ComputerName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
 $VirtualMachine = Add-AzVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
 $VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2012-R2-Datacenter' -Version latest
