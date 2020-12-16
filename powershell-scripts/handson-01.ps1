@@ -26,7 +26,6 @@ Add-AzNetworkSecurityRuleConfig -Name RDP -Description "Allow RDP" `
 -DestinationAddressPrefix * -DestinationPortRange 3389 | 
 Set-AzNetworkSecurityGroup
 
-
 Get-AzNetworkSecurityGroup -Name  hjnsg01 -ResourceGroupName hjrg | 
 Add-AzNetworkSecurityRuleConfig -Name HTTP -Description "Allow HTTP" `
 -Access Allow -Protocol Tcp -Direction Inbound -Priority 110 `
@@ -48,8 +47,7 @@ Set-AzVirtualNetworkSubnetConfig -Name hjsubnet01 -VirtualNetwork $Vnet -Address
 -NetworkSecurityGroup $nsg
 $Vnet | Set-AzVirtualNetwork
 
-
-
+# Create Virtual Machine
 $VMLocalAdminUser = "azureuser"
 $VMLocalAdminSecurePassword = ConvertTo-SecureString  -AsPlainText -Force
 $LocationName = "East US"
