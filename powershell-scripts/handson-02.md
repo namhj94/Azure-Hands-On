@@ -47,8 +47,8 @@ $ExpectedLb | Set-AzLoadBalancer
 
 $VMSSName = "vmss" + $RGName;
 
-$AdminUsername = "azureuser";
-$AdminPassword = "dkagh1.dkagh1.";
+$AdminUsername = "ADMINNAME";
+$AdminPassword = "PASSWORD";
 
 $PublisherName = "MicrosoftWindowsServer" 
 $Offer         = "WindowsServer" 
