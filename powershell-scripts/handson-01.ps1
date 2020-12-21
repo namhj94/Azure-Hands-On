@@ -1,39 +1,42 @@
-# Login to Azure
-connect-azaccount
-# Create Resource Group
-new-azresourcegroup -name hjrg -l eastus
+$resourceGroup = "hjrg"
+$vnetPrefix = "10.0.0.0/8"
+$subnetPrefix = "10.1.0.0/16"
+$location = "eastus"
+$vnetName = "hjvnet01"
+$subnetName = "hjsubnet01"
 # Create Vnet
 $virtualNetwork = New-AzVirtualNetwork `
-  -ResourceGroupName hjrg `
+  -ResourceGroupName $resourceGroup `
   -Location EastUS `
-  -Name hjvnet01 `
-  -AddressPrefix 10.0.0.0/8
+  -Name $vnetName `
+  -AddressPrefix $vnetPrefix
 # Create subnet
 $subnetConfig = Add-AzVirtualNetworkSubnetConfig `
-  -Name hjsubnet01 `
-  -AddressPrefix 10.1.0.0/16 `
+  -Name $subnetName `
+  -AddressPrefix $subnetPrefix `
   -VirtualNetwork $virtualNetwork
 # Connect Vnet and Subnet
 $virtualNetwork | Set-AzVirtualNetwork
 
 # Create NSG & Adding nsg rules
-New-AzNetworkSecurityGroup -Name hjnsg01 -ResourceGroupName hjrg  -Location  eastus
+$nsgName = "hjnsg01"
+New-AzNetworkSecurityGroup -Name $nsgName -ResourceGroupName $resourceGroup  -Location  $location
 
-Get-AzNetworkSecurityGroup -Name  hjnsg01 -ResourceGroupName hjrg | 
+Get-AzNetworkSecurityGroup -Name  $nsgName -ResourceGroupName $resourceGroup | 
 Add-AzNetworkSecurityRuleConfig -Name RDP -Description "Allow RDP" `
 -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 `
 -SourceAddressPrefix * -SourcePortRange * `
 -DestinationAddressPrefix * -DestinationPortRange 3389 | 
 Set-AzNetworkSecurityGroup
 
-Get-AzNetworkSecurityGroup -Name  hjnsg01 -ResourceGroupName hjrg | 
+Get-AzNetworkSecurityGroup -Name  $nsgName -ResourceGroupName $resourceGroup | 
 Add-AzNetworkSecurityRuleConfig -Name HTTP -Description "Allow HTTP" `
 -Access Allow -Protocol Tcp -Direction Inbound -Priority 110 `
 -SourceAddressPrefix * -SourcePortRange * `
 -DestinationAddressPrefix * -DestinationPortRange 80 | 
 Set-AzNetworkSecurityGroup
 
-Get-AzNetworkSecurityGroup -Name  hjnsg01 -ResourceGroupName hjrg | 
+Get-AzNetworkSecurityGroup -Name  $nsgName -ResourceGroupName $resourceGroup | 
 Add-AzNetworkSecurityRuleConfig -Name ICMP -Description "Allow ICMP" `
 -Access Allow -Protocol Tcp -Direction Inbound -Priority 120 `
 -SourceAddressPrefix * -SourcePortRange * `
@@ -41,56 +44,55 @@ Add-AzNetworkSecurityRuleConfig -Name ICMP -Description "Allow ICMP" `
 Set-AzNetworkSecurityGroup
 
 # Associate nsg to subnet
-$Vnet = Get-AzVirtualNetwork -name hjvnet01 -ResourceGroupName hjrg
-$nsg = Get-AzNetworkSecurityGroup -name hjnsg01 -ResourceGroupName hjrg
-Set-AzVirtualNetworkSubnetConfig -Name hjsubnet01 -VirtualNetwork $Vnet -AddressPrefix 10.1.0.0/16 `
+$vnet = Get-AzVirtualNetwork -name $vnetName -ResourceGroupName $resourceGroup
+$nsg = Get-AzNetworkSecurityGroup -name $nsgName -ResourceGroupName $resourceGroup
+Set-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet -AddressPrefix $subnetPrefix `
 -NetworkSecurityGroup $nsg
-$Vnet | Set-AzVirtualNetwork
+$vnet | Set-AzVirtualNetwork
 
 # Create Availability Set
+$avsetName = "hjavset"
 $avset = New-AzAvailabilitySet `
-   -Location "EastUS" `
-   -Name "hjavset" `
-   -ResourceGroupName "hjrg" `
+   -Location $location `
+   -Name $avsetName `
+   -ResourceGroupName $resourceGroup `
    -Sku aligned `
    -PlatformFaultDomainCount 2 `
    -PlatformUpdateDomainCount 2
 
 
 # Create Virtual Machine
-$VMLocalAdminUser = "azureuser"
-$VMLocalAdminSecurePassword = ConvertTo-SecureString  -AsPlainText -Force
-$LocationName = "East US"
-$ResourceGroupName = "hjrg"
-$ComputerName = "hjvm01"
-$VMName = "hjvm01"
-$VMSize = "Standard_DS1_v2"
-$Vnet = Get-AzVirtualNetwork -name hjvnet01 -ResourceGroupName hjrg
+$vm_local_admin_user = "azureuser"
+$vm_local_admin_user_password = ConvertTo-SecureString  -AsPlainText -Force
+$computerName = "hjvm01"
+$vmName = "hjvm01"
+$vmSize = "Standard_DS1_v2"
+$vnet = Get-AzVirtualNetwork -name $vnetName -ResourceGroupName $resourceGroup
 
 $NICName = "hjvm01nic"
-$NIC = New-AzNetworkInterface -Name $NICName -ResourceGroupName $ResourceGroupName -Location $LocationName -SubnetId $Vnet.Subnets[0].Id
+$NIC = New-AzNetworkInterface -Name $NICName -ResourceGroupName $resourceGroup -Location $location -SubnetId $vnet.Subnets[0].Id
 
-$Credential = New-Object System.Management.Automation.PSCredential ($VMLocalAdminUser, $VMLocalAdminSecurePassword);
+$credential = New-Object System.Management.Automation.PSCredential ($vm_local_admin_user, $vm_local_admin_user_password);
 
-$VirtualMachine = New-AzVMConfig -VMName $VMName -VMSize $VMSize -AvailabilitySetId $avset.Id
-$VirtualMachine = Set-AzVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $ComputerName -Credential $Credential -ProvisionVMAgent -EnableAutoUpdate
+$VirtualMachine = New-AzVMConfig -VMName $vmName -VMSize $vmSize -AvailabilitySetId $avset.Id
+$VirtualMachine = Set-AzVMOperatingSystem -VM $VirtualMachine -Windows -ComputerName $computerName -Credential $credential -ProvisionVMAgent -EnableAutoUpdate
 $VirtualMachine = Add-AzVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
 $VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'MicrosoftWindowsServer' -Offer 'WindowsServer' -Skus '2012-R2-Datacenter' -Version latest
 
-New-AzVM -ResourceGroupName $ResourceGroupName -Location $LocationName -VM $VirtualMachine -Verbose
+New-AzVM -ResourceGroupName $resourceGroup -Location $location -VM $VirtualMachine -Verbose
 
 # Create Public LoadBalancer
 $publicip = @{
     Name = 'hjpip'
-    ResourceGroupName = 'hjrg'
-    Location = 'eastus'
+    ResourceGroupName = $resourceGroup
+    Location = $location
     Sku = 'Standard'
     AllocationMethod = 'static'
 }
 New-AzPublicIpAddress @publicip
 
 ## Place public IP created in previous steps into variable. ##
-$publicIp = Get-AzPublicIpAddress -Name 'hjpip' -ResourceGroupName 'hjrg'
+$publicIp = Get-AzPublicIpAddress -Name $publicip.Name -ResourceGroupName $resourceGroup
 
 ## Create load balancer frontend configuration and place in variable. ##
 $feip = New-AzLoadBalancerFrontendIpConfig -Name 'myFrontEnd' -PublicIpAddress $publicIp
@@ -122,9 +124,10 @@ $lbrule = @{
 $rule = New-AzLoadBalancerRuleConfig @lbrule -EnableTcpReset -DisableOutboundSNAT
 
 ## Create the load balancer resource. ##
+$lbName = "myLoadBalancer"
 $loadbalancer = @{
-    ResourceGroupName = 'hjrg'
-    Name = 'myLoadBalancer'
+    ResourceGroupName = $resourceGroup
+    Name = $lbName
     Location = 'eastus'
     Sku = 'Standard'
     FrontendIpConfiguration = $feip
@@ -135,15 +138,18 @@ $loadbalancer = @{
 New-AzLoadBalancer @loadbalancer
 
 # Add VM to loadbalancer backend pool and Create InboundNatRule(Attach VM)
-$lb = Get-AzLoadBalancer -Name "MyLoadBalancer" -ResourceGroupName "hjrg"
+$lb = Get-AzLoadBalancer -Name $lbName -ResourceGroupName $resourceGroup
 $lb | Add-AzLoadBalancerInboundNatRuleConfig -Name "vm01NatRule" -FrontendIPConfiguration $lb.FrontendIpConfigurations[0] -Protocol "Tcp" -FrontendPort 5000 -BackendPort 3389
 $lb | Set-AzLoadBalancer
 
-$nic = Get-AzNetworkInterface -Name "hjvm01nic" -ResourceGroupName "hjrg"
+$vm01NicInfo = get-aznetworkinterface -resourcegroup $resourceGroup
+$vm01NicName = $vm01NicInfo.Name
+
+$nic = Get-AzNetworkInterface -Name $vm01NicName -ResourceGroupName $resourceGroup
 $bepool = $lb | Get-AzLoadBalancerBackendAddressPoolConfig
 $NatRule = $lb | Get-AzLoadBalancerInboundNatRuleConfig
 
-$lb = Get-AzLoadBalancer -Name "MyLoadBalancer" -ResourceGroupName "hjrg"
+$lb = Get-AzLoadBalancer -Name "MyLoadBalancer" -ResourceGroupName $resourceGroup
 Set-AzNetworkInterfaceIpConfig -Name ipconfig1 -NetworkInterface $nic `
 -LoadBalancerBackendAddressPool  $bepool `
 -LoadBalancerInboundNatRule $NatRule
