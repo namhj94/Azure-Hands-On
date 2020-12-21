@@ -62,7 +62,7 @@ $avset = New-AzAvailabilitySet `
 
 
 # Create Virtual Machine
-$vm_local_admin_user = "azureuser"
+$vm_local_admin_user = "USERNAME"
 $vm_local_admin_user_password = ConvertTo-SecureString  -AsPlainText -Force
 $computerName = "hjvm01"
 $vmName = "hjvm01"
