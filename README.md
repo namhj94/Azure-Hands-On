@@ -1,7 +1,7 @@
 # Azure HandsOn Practice
 ### AzureCLI
-![AzureCLI](./bash-scripts)
+[AzureCLI](./bash-scripts)
 ### PowerShell
-![PowerShell](./powershell-scripts)
+[PowerShell](./powershell-scripts)
 ### 3-Tier Architecture
-![3tier](./3tier)
+[3tier](./3tier)
