@@ -4,17 +4,22 @@ $subnetPrefix = "10.1.0.0/16"
 $location = "eastus"
 $vnetName = "hjvnet01"
 $subnetName = "hjsubnet01"
+
 # Create Vnet
+echo "Create Vnet"
 $virtualNetwork = New-AzVirtualNetwork `
   -ResourceGroupName $resourceGroup `
   -Location EastUS `
   -Name $vnetName `
   -AddressPrefix $vnetPrefix
+
 # Create subnet
-$subnetConfig = Add-AzVirtualNetworkSubnetConfig `
+echo "Create Subnet"
+  $subnetConfig = Add-AzVirtualNetworkSubnetConfig `
   -Name $subnetName `
   -AddressPrefix $subnetPrefix `
   -VirtualNetwork $virtualNetwork
+
 # Connect Vnet and Subnet
 $virtualNetwork | Set-AzVirtualNetwork
 
@@ -59,7 +64,6 @@ $avset = New-AzAvailabilitySet `
    -Sku aligned `
    -PlatformFaultDomainCount 2 `
    -PlatformUpdateDomainCount 2
-
 
 # Create Virtual Machine
 $vm_local_admin_user = "USERNAME"
@@ -138,18 +142,22 @@ $loadbalancer = @{
 New-AzLoadBalancer @loadbalancer
 
 # Add VM to loadbalancer backend pool and Create InboundNatRule(Attach VM)
+# Create Inbound NAT Rule
 $lb = Get-AzLoadBalancer -Name $lbName -ResourceGroupName $resourceGroup
 $lb | Add-AzLoadBalancerInboundNatRuleConfig -Name "vm01NatRule" -FrontendIPConfiguration $lb.FrontendIpConfigurations[0] -Protocol "Tcp" -FrontendPort 5000 -BackendPort 3389
 $lb | Set-AzLoadBalancer
 
+# Get nic info 
 $vm01NicInfo = get-aznetworkinterface -resourcegroup $resourceGroup
 $vm01NicName = $vm01NicInfo.Name
-
 $nic = Get-AzNetworkInterface -Name $vm01NicName -ResourceGroupName $resourceGroup
+
+# Get Backend pool info, InboundNatRule info
 $bepool = $lb | Get-AzLoadBalancerBackendAddressPoolConfig
 $NatRule = $lb | Get-AzLoadBalancerInboundNatRuleConfig
 
-$lb = Get-AzLoadBalancer -Name "MyLoadBalancer" -ResourceGroupName $resourceGroup
+# Associate nic to bepool, inboundNatRule
+$lb = Get-AzLoadBalancer -Name $lbName -ResourceGroupName $resourceGroup
 Set-AzNetworkInterfaceIpConfig -Name ipconfig1 -NetworkInterface $nic `
 -LoadBalancerBackendAddressPool  $bepool `
 -LoadBalancerInboundNatRule $NatRule

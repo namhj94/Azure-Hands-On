@@ -1,7 +1,19 @@
 # PowerShell Syntax Guide
+### Powershell version 확인
+```
+$PSVersionTable.PSVersion
+```
+### Azure Powershell version 확인
+```
+ Get-InstalledModule -Name Az -AllVersions | Select-Object -Property Name, Version
+ ```
 ### PowerShell tips
 - 개행문자 `
 - "" => '""'
+- VM 사이즈 확인
+    ```
+    Get-AzVMSize -Location WestUS
+    ```
 ## 기본 개념
 - 기본적으로 오브젝트를 얻어서 변수에 저장후, 다른 리소스 만들때 의존성으로 참조, '|' 파이프라인 사용해서 오브젝트 전달, 리소스의 참조가능($publicip.Name)
 - 생성 순서
