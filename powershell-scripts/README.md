@@ -7,6 +7,27 @@ $PSVersionTable.PSVersion
 ```
  Get-InstalledModule -Name Az -AllVersions | Select-Object -Property Name, Version
  ```
+### 가용한 이미지 검색
+1. Image Publishser 검색
+```
+$locName="<Azure location, such as West US>"
+Get-AzVMImagePublisher -Location $locName | Select PublisherName
+```
+2. 선택한 Publicsher의 Offer 검색
+```
+$pubName="<publisher>"
+Get-AzVMImageOffer -Location $locName -PublisherName $pubName | Select Offer
+```
+3. 선택한 Offer의 SKU(제품) 검색
+```
+$offerName="<offer>"
+Get-AzVMImageSku -Location $locName -PublisherName $pubName -Offer $offerName | Select Skus
+```
+4. 선택한 SKU를 입력하여 이미지 버전을 가져옴
+```
+$skuName="<SKU>"
+Get-AzVMImage -Location $locName -PublisherName $pubName -Offer $offerName -Sku $skuName | Select Version
+```
 ### PowerShell tips
 - 개행문자 `
 - "" => '""'
